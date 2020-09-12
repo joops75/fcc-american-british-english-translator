@@ -31,6 +31,41 @@ const clearListener = () => {
   errorDiv.textContent = '';
 }
 
+const translateText = (str, toBritish) => {
+  let possibleWords;
+  let timeRegex;
+  let possibleTitlesRegex;
+  
+  if (!toBritish) {
+    possibleWords = Object.keys(americanOnly).concat(Object.keys(americanToBritishSpelling));
+    possibleTitlesRegex = ('\\b' + Object.keys(americanToBritishTitles).join('\\B|\\b') + '\\B').replace(/\./g, '\\.');
+    timeRegex = '\\b\\d{1,2}:\\d{2}\\b';
+  } else {
+    possibleWords = Object.keys(britishOnly);
+    possibleTitlesRegex = ('\\b' + Object.keys(americanToBritishTitles).join('\\b|\\b') + '\\b').replace(/\./g, '');
+    timeRegex = '\\b\\d{1,2}\\.\\d{2}\\b';
+  }
+
+  // sort wordlist so longest are at the start
+  // necessary so that longest words are matched first with RegExp
+  possibleWords.sort((a, b) => {
+    return b.length - a.length;
+  });
+
+  return str.replace(new RegExp('\\b' + possibleWords.join('\\b|\\b') + '\\b' + '|' + possibleTitlesRegex + '|' + timeRegex, 'gi'), matchingWord => {
+    if (new RegExp(timeRegex).test(matchingWord)) {
+      return matchingWord.replace(/:|\./, match => match === ':' ? '.' : ':');
+    }
+    const firstLetterCode = matchingWord[0].charCodeAt(0);
+    const isCapitalized = firstLetterCode >= 65 && firstLetterCode <= 90;
+    const translatedWord = americanOnly[matchingWord.toLowerCase()] || americanToBritishSpelling[matchingWord.toLowerCase()] || americanToBritishTitles[matchingWord.toLowerCase()];
+    if (isCapitalized) {
+      return translatedWord[0].toUpperCase() + translatedWord.slice(1);
+    }
+    return translatedWord;
+  });
+}
+
 /* 
   Export your functions for testing in Node.
   Note: The `try` block is to prevent errors on
@@ -38,6 +73,6 @@ const clearListener = () => {
 */
 try {
   module.exports = {
-
+    translateText
   }
 } catch (e) {}

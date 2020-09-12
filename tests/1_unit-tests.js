@@ -28,74 +28,83 @@ suite('Unit Tests', () => {
 
     suite('American to British English', () => {
 
-      test.skip('Mangoes are my favorite fruit. --> Mangoes are my favourite fruit.', () => {
+      test('Mangoes are my favorite fruit. --> Mangoes are my favourite fruit.', () => {
         const input = 'Mangoes are my favorite fruit.';
         const output = 'Mangoes are my favourite fruit.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('I ate yogurt for breakfast. --> I ate yoghurt for breakfast.', () => {
+      test('I ate yogurt for breakfast. --> I ate yoghurt for breakfast.', () => {
         const input = 'I ate yogurt for breakfast.';
         const output = 'I ate yoghurt for breakfast.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip("We had a party at my friend's condo. --> We had a party at my friend's flat.", () => {
+      test("We had a party at my friend's condo. --> We had a party at my friend's flat.", () => {
         const input = "We had a party at my friend's condo.";
         const output = "We had a party at my friend's flat.";
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('Can you toss this in the trashcan for me? --> Can you toss this in the bin for me?', () => {
+      test('Can you toss this in the trashcan for me? --> Can you toss this in the bin for me?', () => {
         const input = 'Can you toss this in the trashcan for me?';
         const output = 'Can you toss this in the bin for me?';
-
-        
+        const translated = Translator.translateText(input);
+        assert.equal(translated, output);
       });
 
-      test.skip('The parking lot was full. --> The car park was full.', () => {
+      test('The parking lot was full. --> The car park was full.', () => {
         const input = 'The parking lot was full.';
         const output = 'The car park was full.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('Like a high tech Rube Goldberg machine. --> Like a high tech Heath Robinson device.', () => {
+      test('Like a high tech Rube Goldberg machine. --> Like a high tech Heath Robinson device.', () => {
         const input = 'Like a high tech Rube Goldberg machine.';
         const output = 'Like a high tech Heath Robinson device.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
       
-      test.skip('To play hooky means to skip class or work. --> To bunk off means to skip class or work.', () => {
+      test('To play hooky means to skip class or work. --> To bunk off means to skip class or work.', () => {
         const input = 'To play hooky means to skip class or work.';
         const output = 'To bunk off means to skip class or work.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('No Mr. Bond, I expect you to die. --> No Mr Bond, I expect you to die. ', () => {
+      test('No Mr. Bond, I expect you to die. --> No Mr Bond, I expect you to die. ', () => {
         const input = 'No Mr. Bond, I expect you to die.';
         const output = 'No Mr Bond, I expect you to die.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('Dr. Grosh will see you now. --> Dr Grosh will see you now. ', () => {
+      test('Dr. Grosh will see you now. --> Dr Grosh will see you now. ', () => {
         const input = 'Dr. Grosh will see you now.';
         const output = 'Dr Grosh will see you now.';
-
+        const translated = Translator.translateText(input);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('Lunch is at 12:15 today. --> Lunch is at 12.15 today.', () => {
+      test('Lunch is at 12:15 today. --> Lunch is at 12.15 today.', () => {
         const input = 'Lunch is at 12:15 today.';
         const output = 'Lunch is at 12.15 today.';
+        const translated = Translator.translateText(input);
         
-        
+        assert.equal(translated, output);
       });
 
     });
@@ -170,6 +179,42 @@ suite('Unit Tests', () => {
         const output = 'Lunch is at 12.15 today.';
 
         
+      });
+
+    });
+
+    suite('Correct replacement of all words and ignoring of partial matches.', () => {
+
+      test('Can replace multiple words at once', () => {
+        const input = 'Please can you put the candy apple in the trashcan. That\'s what the trashcan is for.';
+        const output = 'Please can you put the toffee apple in the bin. That\'s what the bin is for.';
+        const translated = Translator.translateText(input);
+        
+        assert.equal(translated, output);
+      });
+
+      test('Ignores partial matches at start of words', () => {
+        const input = 'His pen was turned into trash after he trashed it.';
+        const output = 'His pen was turned into rubbish after he trashed it.';
+        const translated = Translator.translateText(input);
+        
+        assert.equal(translated, output);
+      });
+
+      test('Ignores partial matches at end of words', () => {
+        const input = 'The guy with an ax said his favorite band is Anthrax.';
+        const output = 'The guy with an axe said his favourite band is Anthrax.';
+        const translated = Translator.translateText(input);
+        
+        assert.equal(translated, output);
+      });
+
+      test('Ignores partial matches of times.', () => {
+        const input = 'At 12:45, enter the code 123:456.';
+        const output = 'At 12.45, enter the code 123:456.';
+        const translated = Translator.translateText(input);
+        
+        assert.equal(translated, output);
       });
 
     });
