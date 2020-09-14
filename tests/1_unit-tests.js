@@ -10,6 +10,9 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const { JSDOM } = require('jsdom');
+const path = require('path');
+const fs = require('fs');
+const { swapKeysValues } = require('../public/swapKeysValues');
 let Translator;
 
 suite('Unit Tests', () => {
@@ -111,79 +114,96 @@ suite('Unit Tests', () => {
 
     suite('British to American English', () => {
 
-      test.skip('We watched the footie match for a while. --> We watched the soccer match for a while.', () => {
+      test('We watched the footie match for a while. --> We watched the soccer match for a while.', () => {
         const input = 'We watched the footie match for a while.';
         const output = 'We watched the soccer match for a while.';
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('Paracetamol takes up to an hour to work. --> Tylenol takes up to an hour to work.', () => {
+      test('Paracetamol takes up to an hour to work. --> Tylenol takes up to an hour to work.', () => {
         const input = 'Paracetamol takes up to an hour to work.';
         const output = 'Tylenol takes up to an hour to work.';
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('First, caramelise the onions. --> First, caramelize the onions.', () => {
+      test('First, caramelise the onions. --> First, caramelize the onions.', () => {
         const input = 'First, caramelise the onions.';
         const output = 'First, caramelize the onions.';
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('I spent the bank holiday at the funfair. --> I spent the public holiday at the carnival.', () => {
+      test('I spent the bank holiday at the funfair. --> I spent the public holiday at the carnival.', () => {
         const input = 'I spent the bank holiday at the funfair.';
         const output = 'I spent the public holiday at the carnival.';
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('I had a bicky then went to the chippy. --> I had a cookie then went to the fish-and-chip shop.', () => {
+      test('I had a bicky then went to the chippy. --> I had a cookie then went to the fish-and-chip shop.', () => {
         const input = 'I had a bicky then went to the chippy.';
         const output = 'I had a cookie then went to the fish-and-chip shop.';
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip("I've just got bits and bobs in my bum bag. --> I've just got odds and ends in my fanny pack.", () => {
+      test("I've just got bits and bobs in my bum bag. --> I've just got odds and ends in my fanny pack.", () => {
         const input = "I've just got bits and bobs in my bum bag.";
         const output = "I've just got odds and ends in my fanny pack.";
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
       
-      test.skip("The car boot sale at Boxted Airfield was called off. --> The swap meet at Boxted Airfield was called off.", () => {
+      test("The car boot sale at Boxted Airfield was called off. --> The swap meet at Boxted Airfield was called off.", () => {
         const input = "The car boot sale at Boxted Airfield was called off.";
         const output = "The swap meet at Boxted Airfield was called off.";
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip("Have you met Mrs Kalyani? --> Have you met Mrs. Kalyani?", () => {
+      test("Have you met Mrs Kalyani? --> Have you met Mrs. Kalyani?", () => {
         const input = "Have you met Mrs Kalyani?";
         const output = "Have you met Mrs. Kalyani?";
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip("Prof Joyner of King's College, London. --> Prof. Joyner of King's College, London.", () => {
+      test("Prof Joyner of King's College, London. --> Prof. Joyner of King's College, London.", () => {
         const input = "Prof Joyner of King's College, London.";
         const output = "Prof. Joyner of King's College, London.";
-
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
-      test.skip('Tea time is usually around 4 or 4.30. --> Tea time is usually around 4 or 4:30.', () => {
-        const input = 'Lunch is at 12:15 today.';
-        const output = 'Lunch is at 12.15 today.';
-
+      test('Tea time is usually around 4 or 4.30. --> Tea time is usually around 4 or 4:30.', () => {
+        const input = 'Lunch is at 12.15 today.';
+        const output = 'Lunch is at 12:15 today.';
+        const translated = Translator.translateText(input, true);
         
+        assert.equal(translated, output);
       });
 
     });
 
     suite('Correct replacement of all words and ignoring of partial matches.', () => {
+
+      test('Titles translations do not produce duplicate periods.', () => {
+        const input = 'Dr. Wainwright will see you now.';
+        const translated = Translator.translateText(input, true);
+        
+        assert.equal(translated, input);
+      });
 
       test('Can replace multiple words at once', () => {
         const input = 'Please can you put the candy apple in the trashcan. That\'s what the trashcan is for.';
@@ -215,6 +235,52 @@ suite('Unit Tests', () => {
         const translated = Translator.translateText(input);
         
         assert.equal(translated, output);
+      });
+
+    });
+
+    suite('British to American Dictionaries can be created on the fly.', () => {
+
+      test('British to American Titles file can be created', () => {
+        const fromFileName = 'american-to-british-titles.js';
+        const toFileName = 'temp-british-to-american-titles.js';
+        const fromFilePath = path.join(process.cwd(), 'public', fromFileName);
+        const toFilePath = path.join(process.cwd(), 'public', toFileName);
+
+        try {
+          assert.isTrue(fs.existsSync(fromFilePath));
+          swapKeysValues(fromFileName, toFileName, 'tempBritishToAmericanTitles');
+          assert.isTrue(fs.existsSync(toFilePath));
+          const { tempBritishToAmericanTitles } = require(toFilePath);
+          assert.isObject(tempBritishToAmericanTitles);
+          assert.equal(tempBritishToAmericanTitles['mr'], 'mr.')
+          assert.equal(tempBritishToAmericanTitles['prof'], 'prof.')
+          // don't delete file or else nodemon will keep restarting
+          // fs.unlinkSync(toFilePath);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
+      test('Britsh to American Spelling file can be created', () => {
+        const fromFileName = 'american-to-british-spelling.js';
+        const toFileName = 'temp-british-to-american-spelling.js';
+        const fromFilePath = path.join(process.cwd(), 'public', fromFileName);
+        const toFilePath = path.join(process.cwd(), 'public', toFileName);
+
+        try {
+          assert.isTrue(fs.existsSync(fromFilePath));
+          swapKeysValues(fromFileName, toFileName, 'tempBritishToAmericanSpelling');
+          assert.isTrue(fs.existsSync(toFilePath));
+          const { tempBritishToAmericanSpelling } = require(toFilePath);
+          assert.isObject(tempBritishToAmericanSpelling);
+          assert.equal(tempBritishToAmericanSpelling['accessorise'], 'accessorize')
+          assert.equal(tempBritishToAmericanSpelling['aeon'], 'eon')
+          // don't delete file or else nodemon will keep restarting
+          // fs.unlinkSync(toFilePath);
+        } catch (error) {
+          console.log(error);
+        }
       });
 
     });

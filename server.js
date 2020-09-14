@@ -1,4 +1,14 @@
 require('dotenv').config();
+
+// create any missing dictionaries before starting server
+const { swapKeysValues } = require('./public/swapKeysValues');
+try {
+  swapKeysValues('american-to-british-titles.js', 'british-to-american-titles.js', 'britishToAmericanTitles');
+  swapKeysValues('american-to-british-spelling.js', 'british-to-american-spelling.js', 'britishToAmericanSpelling');
+} catch (error) {
+  console.log(error);
+}
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const expect      = require('chai').expect;

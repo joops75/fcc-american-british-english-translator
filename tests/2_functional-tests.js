@@ -31,9 +31,16 @@ suite('Functional Tests', () => {
       and the translated words or terms are wrapped in 
       `<span class="highlight">...</span>` tags when the "Translate" button is pressed.
     */
-    test.skip("Translation appended to the `translated-sentence` `div`", () => {
+    test("Translation appended to the `translated-sentence` `div`", () => {
+      // clear div
+      translatedDiv.innerHTML = '';
+      assert.isEmpty(translatedDiv.innerHTML);
 
-      
+      // enter text
+      textarea.value = 'The rv park is open from 7:00.';
+      translateBtn.click();
+
+      assert.equal(translatedDiv.innerHTML, 'The <span class="highlight">caravan site</span> is open from <span class="highlight">7.00</span>.')
     });
 
     /* 
@@ -41,9 +48,16 @@ suite('Functional Tests', () => {
       the message 'Everything looks good to me!' is appended to the
       `translated-sentence` `div` when the "Translate" button is pressed.
     */
-    test.skip("'Everything looks good to me!' message appended to the `translated-sentence` `div`", () => {
+    test("'Everything looks good to me!' message appended to the `translated-sentence` `div`", () => {
+      // clear div
+      translatedDiv.innerHTML = '';
+      assert.isEmpty(translatedDiv.innerHTML);
 
-      
+      // enter text
+      textarea.value = `1                       2`;
+      translateBtn.click();
+
+      assert.equal(translatedDiv.innerHTML, 'Everything looks good to me!')
     });
 
     /* 
